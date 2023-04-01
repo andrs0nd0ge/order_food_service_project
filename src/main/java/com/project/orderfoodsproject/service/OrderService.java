@@ -24,9 +24,20 @@ public class OrderService {
                 .map(OrderDto::from)
                 .collect(Collectors.toList());
     }
-    public void makeOrder(Authentication auth, Long dishId) {
-        Client user = (Client) auth.getPrincipal();
-        orderDao.makeOrder(user.getId(), dishId);
+    public String makeOrder(Authentication auth, Long dishId) {
+        String response = "";
+        List<Order> orders = orderDao.getAllOrders();
+        for (Order order : orders) {
+            if (dishId.equals(order.getId())) {
+                Client user = (Client) auth.getPrincipal();
+                orderDao.makeOrder(user.getId(), dishId);
+                response = "Order has been completed. Enjoy your meal!";
+            } else {
+                response = "A dish with given ID doesn't exist. Please, try again";
+            }
+            break;
+        }
+        return response;
     }
     public List<OwnOrderDto> getOwnOrders(Authentication auth) {
         Client user = (Client) auth.getPrincipal();

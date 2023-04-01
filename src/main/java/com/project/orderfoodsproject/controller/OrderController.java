@@ -25,8 +25,8 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
     @PostMapping("/{dishId}")
-    public void makeOrder(Authentication auth, @PathVariable Long dishId) {
-        orderService.makeOrder(auth, dishId);
+    public ResponseEntity<String> makeOrder(Authentication auth, @PathVariable Long dishId) {
+        return new ResponseEntity<>(orderService.makeOrder(auth, dishId), HttpStatus.OK);
     }
     @GetMapping
     public ResponseEntity<List<OwnOrderDto>> getOwnOrders(Authentication auth) {
