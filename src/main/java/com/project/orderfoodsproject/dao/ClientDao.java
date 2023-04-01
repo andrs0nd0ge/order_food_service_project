@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -20,5 +21,12 @@ public class ClientDao {
         String sql = String.format("insert into clients (username, email, password) " +
                 "values ('%s', '%s', '%s')", username, email, password);
         jdbcTemplate.execute(sql);
+    }
+
+    public Optional<Client> getClientByEmail(String email) {
+        String sql = String.format("select * from clients where email = '%s'", email);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Client.class))
+                .stream()
+                .findFirst();
     }
 }

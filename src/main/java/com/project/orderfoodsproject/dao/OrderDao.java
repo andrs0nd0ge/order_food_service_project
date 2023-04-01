@@ -1,5 +1,6 @@
 package com.project.orderfoodsproject.dao;
 
+import com.project.orderfoodsproject.entity.Dish;
 import com.project.orderfoodsproject.entity.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -21,8 +22,10 @@ public class OrderDao {
                 "values (%s, %s)", clientId, dishId);
         jdbcTemplate.execute(sql);
     }
-    public List<Order> getOwnOrders(Long clientId) {
-        String sql = String.format("select * from orders where client_id = %s", clientId);
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Order.class));
+    public List<Dish> getOwnOrders(Long clientId) {
+        String sql = String.format("select d.name, d.type, d.price, d.place_id from orders as o " +
+                "left join dishes as d on d.id = o.dish_id " +
+                "where client_id = %s", clientId);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Dish.class));
     }
 }
